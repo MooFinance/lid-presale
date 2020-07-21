@@ -17,6 +17,8 @@ import Portis from "@portis/web3";
 import Squarelink from "squarelink";
 import MewConnect from "@myetherwallet/mewconnect-web-client";
 
+import Header from "./components/Header"
+
 const INFURA_ID = "86df43e496cb4c1cac25c9a57960a4ed"
 
 const providerOptions = {
@@ -215,6 +217,7 @@ function App() {
   return (
     <ThemeProvider theme={theme} >
       <CSSReset />
+      < Header web3={web3} address={address} onConnect={onConnect} />
     </ThemeProvider>
   );
 }
