@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import addresses from "./contracts/addresses";
 import abis from "./contracts/abis";
-import { ThemeProvider, CSSReset } from "@chakra-ui/core"
+import { ThemeProvider, CSSReset, Box } from "@chakra-ui/core"
 import theme from "./theme"
 import "./App.css";
 
@@ -18,6 +18,12 @@ import Squarelink from "squarelink";
 import MewConnect from "@myetherwallet/mewconnect-web-client";
 
 import Header from "./components/Header"
+import Subheading from "./components/Subheading"
+import CountDown from "./components/CountDown"
+import EndTimer from "./components/EndTimer"
+import StartTimer from "./components/StartTimer"
+import ReferralCode from "./components/ReferralCode"
+import Footer from "./components/Footer"
 
 const INFURA_ID = "86df43e496cb4c1cac25c9a57960a4ed"
 
@@ -61,9 +67,7 @@ const providerOptions = {
       infuraId: INFURA_ID // required
     }
   }
-};
-
-console.log(Web3Modal)
+}
 
 const web3Modal = new Web3Modal({
   network: "mainnet", // optional
@@ -80,7 +84,7 @@ function App() {
   const [web3, setWeb3] = useState(new Web3(provider))
   const [connected, setConnected] = useState(false)
 
-  const [startTime, setStartTime] = useState(Date.UTC(2020,7,22,2,0,0,0))
+  const [startTime, setStartTime] = useState(Date.UTC(2020,6,22,2,0,0,0))
   const [endTime, setEndTime] = useState(null)
   const [isActive, setIsActive] = useState(Date.now() > startTime)
   const [isEnded, setIsEnded] = useState(false)
@@ -95,6 +99,7 @@ function App() {
 
   const [accountLid, setAccountLid] = useState("0")
   const [accountEthDeposit, setAccountEthDeposit] = useState("0")
+  const [isWhitelisted, setIsWhitelisted] = useState(false)
 
   const [currentPrice, setCurrentPrice] = useState("0")
   const [maxDeposit, setMaxDeposit] = useState("0")
@@ -104,7 +109,6 @@ function App() {
   useEffect(()=>{
     if(!web3) return
     if(!address) return
-    console.log("Address",address)
 
     const lidPresaleSC = new web3.eth.Contract(abis.lidPresale, addresses.lidPresale)
     const lidTimerSC = new web3.eth.Contract(abis.lidTimer, addresses.lidTimer)
@@ -123,7 +127,8 @@ function App() {
         accountEthDeposit,
         currentPrice,
         earnedReferrals,
-        referralCount
+        referralCount,
+        isWhitelisted
       ] = await Promise.all([
         lidPresaleSC.methods.totalTokens().call(),
         web3.eth.getBalance(addresses.lidPresale),
@@ -132,16 +137,27 @@ function App() {
         lidPresaleSC.methods.depositAccounts(address).call(),
         lidPresaleSC.methods.calculateRate().call(),
         lidPresaleSC.methods.earnedReferrals(address).call(),
-        lidPresaleSC.methods.referralCounts(address).call()
+        lidPresaleSC.methods.referralCounts(address).call(),
+        lidPresaleSC.methods.whitelist(address).call()
       ])
 
       const [maxDeposit, endTime] = await Promise.all([
         lidPresaleSC.methods.getMaxWhitelistedDeposit(totalEth).call(),
         lidTimerSC.methods.getEndTime(totalEth).call()
       ])
-    }
 
-    //TODO: Set variables fromvalues fetched from SC
+      setTotalLid(totalLid)
+      setTotalEth(totalEth)
+      setTotalDepositors(totalDepositors)
+      setAccountLid(accountLid)
+      setAccountEthDeposit(accountEthDeposit)
+      setCurrentPrice(setCurrentPrice)
+      setEarnedReferrals(earnedReferrals)
+      setReferralCount(referralCount)
+      setIsWhitelisted(isWhitelisted)
+      setMaxDeposit(maxDeposit)
+      setEndTime(new Date(endTime*1000))
+    }
 
     fetchData(web3,address,lidPresaleSC,lidTimerSC,lidTokenSC)
 
@@ -202,22 +218,39 @@ function App() {
     if(window.web3) onConnect()
   },[])
 
-  /*
-  TODO: update all timers once per second
   useEffect(()=>{
-    if(Date.now() < time){
+    if(Date.now() < startTime){
       let interval = setInterval(()=>{
-        setIsActive(Date.now() > time)
+        setIsActive(Date.now() > startTime)
       },500)
       return ()=>clearInterval(interval)
     }
-  },[time])
-  */
+  },[startTime])
+
+  useEffect(()=>{
+    if(Date.now() < endTime ){
+      let interval = setInterval(()=>{
+        setIsEnded(Date.now() > endTime)
+      },500)
+      return ()=>clearInterval(interval)
+    }
+  },[endTime])
 
   return (
     <ThemeProvider theme={theme} >
       <CSSReset />
-      < Header web3={web3} address={address} onConnect={onConnect} />
+      <Header web3={web3} address={address} onConnect={onConnect} isWhitelisted={isWhitelisted} />
+      <Subheading web3={web3} address={address} totalLid={totalLid} totalEth={totalEth}
+        totalDepositors={totalDepositors} accountEthDeposit={accountEthDeposit} accountLid={accountLid} />
+      {isActive ? (
+        <EndTimer expiryTimestamp={(endTime == null ? new Date() : endTime)} />
+      ) : (
+        <Box w="100%" textAlign="center">
+          <StartTimer expiryTimestamp={new Date(startTime)} />
+          <ReferralCode address={address} />
+        </Box>
+      )}
+      <Footer />
     </ThemeProvider>
   );
 }

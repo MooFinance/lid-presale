@@ -34,9 +34,6 @@ export function shortEther(wei,web3) {
     resultInteger = etherString
   }
 
-  console.log("decimal",resultDecimal)
-  console.log("integer",resultInteger)
-
   if(resultDecimal === "0") {
     if(resultInteger.length === 1) {
       resultDecimal = ".00"

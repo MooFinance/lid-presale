@@ -1,51 +1,76 @@
 import React from 'react';
-import { Text, Box, Flex, Link, Grid } from "@chakra-ui/core"
+import { Text, Box, Flex, Link, Grid, Image } from "@chakra-ui/core"
 import addresses from "../contracts/addresses"
 import {shortEther} from "../utils"
 
-export default function Subheading({web3, address, accountLidStaked, accountLid, totalLidStaked}) {
+export default function Subheading({
+  web3, address, totalLid, totalEth,
+  totalDepositors, accountEthDeposit, accountLid
+}) {
   const toBN = web3.utils.toBN
   return (
-    <Box w="100%" bg="lid.bgGray" m="0" p={["20px", "20px", "0px"]} pt="0px" pb="20px" >
-      <Flex w="100%" maxW="1200px" align="center" ml="auto" mr="auto" p="0px" pt="20px" pb="20px">
+    <Box w="100%" bg="lid.bgGray" m="0" p={["20px", "20px", "0px"]} pt="0px" pb="20px" bg="lid.bgMed" position="relative">
+      <Box position="absolute" zIndex="1" left="0px" right="0px" bottom="0px" height="100px" bg="lid.bg" />
+      <Flex w="100%" maxW="1200px" align="center" ml="auto" mr="auto" p="0px" pt="20px" pb="20px" position="relative" zIndex="2">
         <Grid w="100%" gap="20px" maxWidth="100vw"
-          templateRows={["max-content max-content max-content", "max-content max-content", "max-content"]}
-          templateColumns={["auto", "auto auto", "285px 285px 285px 285px"]}>
-          <Box p="0" gridColumn={["span 1", "span 2", "span 2", "span 2"]}>
-            <Text fontWeight="bold" fontSize="36px" color="lid.dark" m="0" p="0">
-              Lid Staking
+          templateRows={{base:"repeat(6, 1fr)", md:"repeat(2, max-content)"}}
+          templateColumns={{base:"auto", md:"repeat(3, minmax(0, 1fr))"}}>
+          <Box  w="100%"  borderRadius="5px" p="25px" border="solid 1px" borderColor="lid.stroke" bg="lid.bg" >
+            <Text fontSize="18px" m="0" p="0" color="lid.fgMed">
+              Verified LID Presale Contract
             </Text>
-            <Text w="100%" color="lid.dkGray" mt="10px" mb="10px">
-              Manage your current holdings and stake to earn more Lid.
-            </Text>
-            <Text color="lid.dkGray">
-              Verified Lid Contract:
-            </Text>
-            <Link wordBreak="break-word" color="lid.blue" href={"https://etherscan.io/token/"+addresses.lidToken}>
+            <Link wordBreak="break-word" color="lid.brand" href={"https://etherscan.io/token/"+addresses.lidToken}>
               {addresses.lidToken}
             </Link>
           </Box>
-          <Box  w="100%" bg="lid.violet" color="white" borderRadius="5px" p="15px">
-            <Text w="100%" mt="5px">
-              Your Staked Lid
+          <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="white" borderRadius="5px" p="25px"
+            bg="linear-gradient(0deg, rgba(12,101,235,1) 0%, rgba(28,158,247,1) 100%)" >
+            <Image src="/ethereum-eth-logo-white.png" alt="Lid Website" w="auto" h="25px" display="inline-block" position="relative" top="-3px"/>
+            <Text ml="10px" mt="5px" color="lid.bg" display="inline-block">
+              Your ETH Deposits
             </Text>
-            <Text fontSize="36px" w="100%">
-              {shortEther(accountLidStaked,web3)}
-            </Text>
-            <Text w="100%">
-              <Text as="span" color="lid.teal" >{
-                toBN(totalLidStaked).gt(toBN(0)) ?
-                toBN(accountLidStaked).mul(toBN("10000")).div(toBN(totalLidStaked)).toNumber()/100
-                : "0"
-              }%</Text> of Total Staked
+            <Text fontSize="38px" w="100%" fontWeight="bold">
+              {shortEther(accountEthDeposit,web3)}
             </Text>
           </Box>
-          <Box  w="100%" bg="lid.violet" color="white" borderRadius="5px" p="15px">
-            <Text w="100%" mt="5px" mb="15px">
-              Your Lid Wallet
+          <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="white" borderRadius="5px" p="25px"
+            bg="linear-gradient(0deg, rgba(12,101,235,1) 0%, rgba(28,158,247,1) 100%)" >
+            <Image src="/LID_logo_pure_white.png" alt="Lid Website" w="auto" h="25px" display="inline-block" position="relative" top="-3px"/>
+            <Text ml="10px" mt="5px" color="lid.bg" display="inline-block">
+              Your LID Tokens
             </Text>
-            <Text fontSize="36px" w="100%">
+            <Text fontSize="38px" w="100%" fontWeight="bold">
               {shortEther(accountLid,web3)}
+            </Text>
+          </Box>
+          <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="lid.fg" borderRadius="5px" p="25px"
+            bg="lid.bg" >
+            <Image src="/Depositor.png" alt="Lid Website" w="auto" h="25px" display="inline-block" position="relative" top="-3px"/>
+            <Text ml="10px" mt="5px" color="lid.fgMed" display="inline-block">
+              Total Presale Depositors
+            </Text>
+            <Text fontSize="38px" w="100%" fontWeight="bold" color="lid.brand">
+              {shortEther(totalDepositors,web3)}
+            </Text>
+          </Box>
+          <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="lid.fg" borderRadius="5px" p="25px"
+            bg="lid.bg" >
+            <Image src="/ethereum-eth-logo.png" alt="Lid Website" w="auto" h="25px" display="inline-block" position="relative" top="-3px"/>
+            <Text ml="10px" mt="5px" color="lid.fgMed" display="inline-block">
+              Total ETH Deposited
+            </Text>
+            <Text fontSize="38px" w="100%" fontWeight="bold" color="lid.brand">
+              {shortEther(totalDepositors,web3)}
+            </Text>
+          </Box>
+          <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="lid.fg" borderRadius="5px" p="25px"
+            bg="lid.bg" >
+            <Image src="/logo-200.png" alt="Lid Website" w="auto" h="25px" display="inline-block" position="relative" top="-3px"/>
+            <Text ml="10px" mt="5px" color="lid.fgMed" display="inline-block">
+              Total Presale Lid
+            </Text>
+            <Text fontSize="38px" w="100%" fontWeight="bold" color="lid.brand">
+              {shortEther(totalDepositors,web3)}
             </Text>
           </Box>
         </Grid>

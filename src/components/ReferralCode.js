@@ -7,24 +7,24 @@ import NumericTxInput from "./NumericTxInput"
 
 export default function ReferralCode({address}) {
   return (
-    <Box w="100%" maxWidth="1200px" bg="white" m="0" ml="auto" mr="auto" mb="40px" mt={["10px","20px","20px","20px"]}
-      p={["20px", "20px", "0px"]} pb="20px">
-      <CopyToClipboard text={"https://stake.lid.dev/#/"+address}>
-        <Button display="block" color="lid.buttonFgGray" bg="lid.buttonBgGray"
+    <Box textAlign="left" border="solid 1px" borderRadius="5px" borderColor="lid.stroke" w="100%" maxWidth="900px" bg="white" m="0" ml="auto" mr="auto" mb="40px" mt={["10px","20px","20px","20px"]}
+       p="20px" pb="20px">
+      <CopyToClipboard text={"https://stake.lid.sh/#/"+address}>
+        <Button display="block" color="lid.bg" bg="lid.buttonBg"
           h="50px" w="140px" float="right" mt="25px">
           Copy
         </Button>
       </CopyToClipboard>
-      <Text fontSize="36px" color="lid.dark" width="100%">
+      <Text fontSize="36px" color="lid.fg" width="100%">
         Referral Code
       </Text>
-      <Text color="lid.blue" mt="10px" mb="10px">
-        2% rewards when anyone uses to stake
+      <Text color="lid.brand" mt="10px" mb="10px">
+        2.5% rewards when anyone uses to deposit
       </Text>
-      <Text wordBreak="break-word" p="15px" pl="25px" color="lid.dkGray" border="solid 1px" borderColor="lid.ltGray"
+      <Text wordBreak="break-word" p="15px" pl="25px" color="lid.fgMed" border="solid 1px" borderColor="lid.stroke"
         w="100%" borderRadius="5px"
       >
-        https://stake.lid.dev/#/{address}
+        https://stake.lid.sh/#/{address}
       </Text>
     </Box>
   );
