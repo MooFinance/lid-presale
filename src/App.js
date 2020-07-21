@@ -24,6 +24,7 @@ import EndTimer from "./components/EndTimer"
 import StartTimer from "./components/StartTimer"
 import ReferralCode from "./components/ReferralCode"
 import Footer from "./components/Footer"
+import DepositForm from "./components/DepositForm"
 
 const INFURA_ID = "86df43e496cb4c1cac25c9a57960a4ed"
 
@@ -106,6 +107,15 @@ function App() {
   const [earnedReferrals, setEarnedReferrals] = useState("0")
   const [referralCount, setReferralCount] = useState("0")
 
+  const [depositVal, setDepositVal] = useState("")
+
+  const toBN = web3.utils.toBN
+  const toWei = web3.utils.toWei
+  const fromWei = web3.utils.fromWei
+
+  let referralAddress = window.location.hash.substr(2);
+  if(!referralAddress || referralAddress.length !== 42 ) referralAddress = "0x0000000000000000000000000000000000000000"
+
   useEffect(()=>{
     if(!web3) return
     if(!address) return
@@ -116,6 +126,10 @@ function App() {
     if (!lidPresaleSC) return
     if (!lidTimerSC) return
     if (!lidTokenSC) return
+
+    setLidPresale(lidPresaleSC)
+    setLidTimerSC(lidTimerSC)
+    setLidTokenSC(lidTokenSC)
 
     //TODO: Switch to multicall.js
     let fetchData = async(web3,address,lidPresaleSC,lidTimerSC,lidTokenSC)=>{
@@ -151,7 +165,7 @@ function App() {
       setTotalDepositors(totalDepositors)
       setAccountLid(accountLid)
       setAccountEthDeposit(accountEthDeposit)
-      setCurrentPrice(setCurrentPrice)
+      setCurrentPrice(currentPrice)
       setEarnedReferrals(earnedReferrals)
       setReferralCount(referralCount)
       setIsWhitelisted(isWhitelisted)
@@ -177,6 +191,33 @@ function App() {
     return ()=>clearInterval(interval)
 
   },[web3,address])
+
+  const handleDeposit = async function () {
+    console.log("depositVal",typeof(depositVal))
+    if(depositVal == "" || depositVal == null || depositVal == undefined) {
+      alert("Must enter a value between 0.01 eth and max.")
+      return
+    }
+    if(toBN(depositVal).lt(toBN(toWei("0.01")))) {
+      alert("Must enter a value between 0.01 eth and max.")
+      return
+    }
+    console.log()
+    if(toBN(maxDeposit).lt(toBN(depositVal))) {
+      alert("Must enter a value between 0.01 eth and max.")
+      return
+    }
+    console.log("address",address)
+    const balance = await web3.eth.getBalance(address)
+    console.log("balance",balance)
+    console.log("depositVal",depositVal)
+    if(toBN(balance).lt(toBN(depositVal))) {
+      alert("Must enter a value lower than your ETH balance.")
+      return
+    }
+    await lidPresaleSC.methods.deposit(referralAddress).send({from:address,value:depositVal})
+    alert("Deposit request sent. Check your wallet to see when it has completed, then refresh this page.")
+  }
 
 
   const resetApp = async () => {
@@ -242,14 +283,16 @@ function App() {
       <Header web3={web3} address={address} onConnect={onConnect} isWhitelisted={isWhitelisted} />
       <Subheading web3={web3} address={address} totalLid={totalLid} totalEth={totalEth}
         totalDepositors={totalDepositors} accountEthDeposit={accountEthDeposit} accountLid={accountLid} />
-      {isActive ? (
+      {isActive ? (<Box w="100%">
         <EndTimer expiryTimestamp={(endTime == null ? new Date() : endTime)} />
-      ) : (
+        <DepositForm web3={web3} rate={currentPrice} val={depositVal} setVal={setDepositVal} handleClick={handleDeposit}
+          cap={isWhitelisted ? maxDeposit : toWei("1")}  />
+      </Box>) : (
         <Box w="100%" textAlign="center">
           <StartTimer expiryTimestamp={new Date(startTime)} />
-          <ReferralCode address={address} />
         </Box>
       )}
+      <ReferralCode address={address} />
       <Footer />
     </ThemeProvider>
   );

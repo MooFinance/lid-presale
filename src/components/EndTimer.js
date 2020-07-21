@@ -4,8 +4,6 @@ import { Text, Box } from "@chakra-ui/core"
 import CountDown from "./CountDown"
 
 export default function EndTimer({ expiryTimestamp }) {
-  console.log("endTimer")
-  console.log(expiryTimestamp)
   return (
     <Box display="block" w="100%" mt="40px" mb="40px"
     pl={{base:"20px", lg:"0px"}} pr={{base:"20px", lg:"0px"}}

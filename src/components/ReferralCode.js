@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { Text, Box, Button } from "@chakra-ui/core"
 import addresses from "../contracts/addresses";
-import NumericTxInput from "./NumericTxInput"
 
 export default function ReferralCode({address}) {
   return (

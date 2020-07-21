@@ -1,6 +1,9 @@
 # build
 build/
 
+#private
+whitelist.txt
+
 # Logs
 logs
 *.log
