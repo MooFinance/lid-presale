@@ -8,6 +8,7 @@ export default function Subheading({
   totalDepositors, accountEthDeposit, accountLid
 }) {
   const toBN = web3.utils.toBN
+  const toWei = web3.utils.toWei
   return (
     <Box w="100%" bg="lid.bgGray" m="0" p={["20px", "20px", "0px"]} pt="0px" pb="20px" bg="lid.bgMed" position="relative">
       <Box position="absolute" zIndex="1" left="0px" right="0px" bottom="0px" height="100px" bg="lid.bg" />
@@ -40,7 +41,7 @@ export default function Subheading({
               Your LID Tokens
             </Text>
             <Text fontSize="38px" w="100%" fontWeight="bold">
-              {shortEther(accountLid,web3)}
+              {shortEther(toBN(accountLid).mul(toBN(toWei("1"))),web3)}
             </Text>
           </Box>
           <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="lid.fg" borderRadius="5px" p="25px"
