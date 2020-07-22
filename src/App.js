@@ -109,6 +109,8 @@ function App() {
 
   const [depositVal, setDepositVal] = useState("")
 
+  const [accountIsRepaired, setAccountIsRepaired] = useState(true)
+
   const toBN = web3.utils.toBN
   const toWei = web3.utils.toWei
   const fromWei = web3.utils.fromWei
@@ -163,7 +165,13 @@ function App() {
       setTotalLid(totalLid)
       setTotalEth(totalEth)
       setTotalDepositors(totalDepositors)
-      setAccountLid(accountLid)
+      if(toBN(accountLid).lt(toBN(1e+18))){
+        setAccountLid(toBN(accountLid).mul(toBN(1e+18)))
+        setAccountIsRepaired(false)
+      } else {
+        setAccountLid(accountLid)
+        setAccountIsRepaired(true)
+      }
       setAccountEthDeposit(accountEthDeposit)
       setCurrentPrice(currentPrice)
       setEarnedReferrals(earnedReferrals)

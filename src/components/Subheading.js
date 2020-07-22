@@ -5,7 +5,7 @@ import {shortEther} from "../utils"
 
 export default function Subheading({
   web3, address, totalLid, totalEth,
-  totalDepositors, accountEthDeposit, accountLid
+  totalDepositors, accountEthDeposit, accountLid, accountIsRepaired
 }) {
   const toBN = web3.utils.toBN
   const toWei = web3.utils.toWei
@@ -41,8 +41,13 @@ export default function Subheading({
               Your LID Tokens
             </Text>
             <Text fontSize="38px" w="100%" fontWeight="bold">
-              {shortEther(toBN(accountLid).mul(toBN(toWei("1"))),web3)}
+              {shortEther(accountLid,web3)}
             </Text>
+            {!accountIsRepaired &&
+              <Text fontSize="16px" w="100%" color="lid.bg">
+                *Value incorrect (0-30%). Fix underway.
+              </Text>
+            }
           </Box>
           <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="lid.fg" borderRadius="5px" p="25px"
             bg="lid.bg" >
@@ -71,7 +76,10 @@ export default function Subheading({
               Total Presale Lid
             </Text>
             <Text fontSize="38px" w="100%" fontWeight="bold" color="lid.brand">
-              {shortEther(toBN(totalLid).mul(toBN(toWei("1"))),web3)}
+              x.xx
+            </Text>
+            <Text fontSize="16px" w="100%" color="lid.fgMed">
+              *Under repair, eta 2 hr
             </Text>
           </Box>
         </Grid>
