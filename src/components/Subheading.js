@@ -51,7 +51,7 @@ export default function Subheading({
               Total Presale Depositors
             </Text>
             <Text fontSize="38px" w="100%" fontWeight="bold" color="lid.brand">
-              {shortEther(totalDepositors,web3)}
+              {totalDepositors}
             </Text>
           </Box>
           <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="lid.fg" borderRadius="5px" p="25px"
@@ -61,7 +61,7 @@ export default function Subheading({
               Total ETH Deposited
             </Text>
             <Text fontSize="38px" w="100%" fontWeight="bold" color="lid.brand">
-              {shortEther(totalDepositors,web3)}
+              {shortEther(totalEth,web3)}
             </Text>
           </Box>
           <Box  w="100%"  border="solid 1px" borderColor="lid.stroke" color="lid.fg" borderRadius="5px" p="25px"
@@ -71,7 +71,7 @@ export default function Subheading({
               Total Presale Lid
             </Text>
             <Text fontSize="38px" w="100%" fontWeight="bold" color="lid.brand">
-              {shortEther(totalDepositors,web3)}
+              {shortEther(toBN(totalLid).mul(toBN(toWei("1"))),web3)}
             </Text>
           </Box>
         </Grid>
