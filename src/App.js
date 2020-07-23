@@ -109,8 +109,6 @@ function App() {
 
   const [depositVal, setDepositVal] = useState("")
 
-  const [accountIsRepaired, setAccountIsRepaired] = useState(true)
-
   const toBN = web3.utils.toBN
   const toWei = web3.utils.toWei
   const fromWei = web3.utils.fromWei
@@ -151,7 +149,7 @@ function App() {
         lidPresaleSC.methods.totalDepositors().call(),
         lidPresaleSC.methods.accountEarnedLid(address).call(),
         lidPresaleSC.methods.depositAccounts(address).call(),
-        lidPresaleSC.methods.calculateRate().call(),
+        lidPresaleSC.methods.calculateRatePerEth().call(),
         lidPresaleSC.methods.earnedReferrals(address).call(),
         lidPresaleSC.methods.referralCounts(address).call(),
         lidPresaleSC.methods.whitelist(address).call()
@@ -165,13 +163,7 @@ function App() {
       setTotalLid(totalLid)
       setTotalEth(totalEth)
       setTotalDepositors(totalDepositors)
-      if(toBN(accountLid).lt(toBN(1e+18))){
-        setAccountLid(toBN(accountLid).mul(toBN(1e+18)))
-        setAccountIsRepaired(false)
-      } else {
-        setAccountLid(accountLid)
-        setAccountIsRepaired(true)
-      }
+      setAccountLid(accountLid)
       setAccountEthDeposit(accountEthDeposit)
       setCurrentPrice(currentPrice)
       setEarnedReferrals(earnedReferrals)
@@ -201,7 +193,6 @@ function App() {
   },[web3,address])
 
   const handleDeposit = async function () {
-    console.log("depositVal",typeof(depositVal))
     if(depositVal == "" || depositVal == null || depositVal == undefined) {
       alert("Must enter a value between 0.01 eth and max.")
       return
@@ -210,15 +201,11 @@ function App() {
       alert("Must enter a value between 0.01 eth and max.")
       return
     }
-    console.log()
     if(toBN(maxDeposit).lt(toBN(depositVal))) {
       alert("Must enter a value between 0.01 eth and max.")
       return
     }
-    console.log("address",address)
     const balance = await web3.eth.getBalance(address)
-    console.log("balance",balance)
-    console.log("depositVal",depositVal)
     if(toBN(balance).lt(toBN(depositVal))) {
       alert("Must enter a value lower than your ETH balance.")
       return

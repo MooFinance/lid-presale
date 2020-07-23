@@ -8,15 +8,19 @@ import {Box, Text, Button, NumberInput, NumberInputField  } from "@chakra-ui/cor
   }
 
 export default function DepositForm({web3,rate,cap,setVal,val,handleClick}) {
+
   const toBN = web3.utils.toBN
   const toWei = web3.utils.toWei
   const fromWei = web3.utils.fromWei
+
 
   const [displayVal, setDisplayVal] = useState("")
 
   useEffect(()=>{
     if(displayVal != "" && !isNaN(displayVal))
       setVal(toWei(displayVal))
+    console.log('val',val)
+    console.log('rate',rate)
   },[displayVal])
 
   return(
@@ -31,7 +35,9 @@ export default function DepositForm({web3,rate,cap,setVal,val,handleClick}) {
         MAX: {shortenDecimal(fromWei(cap))}
       </Text>
       <Text fontSize="18px">
-        Estimated LID: {!val ? "0" : shortenDecimal(toBN(val).mul(toBN(9750)).div(toBN(rate)).div(toBN(10000)))}
+        Estimated LID: {!val ? "0" : shortenDecimal(
+          toBN(val).div(toBN(rate))
+        )}
       </Text>
 
       <NumberInput fontSize="18px" w="100%" maxW="600px" mb="0px"
