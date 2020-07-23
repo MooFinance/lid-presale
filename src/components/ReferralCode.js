@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
-import ReactDOM from 'react-dom';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import { Text, Box, Button } from "@chakra-ui/core"
-import addresses from "../contracts/addresses";
+import React from "react"
+import {CopyToClipboard} from 'react-copy-to-clipboard'
+import { Text, Box, Button, Grid } from "@chakra-ui/core"
+import {shortEther} from "../utils"
 
-export default function ReferralCode({address}) {
-  return (
-    <Box textAlign="left" border="solid 1px" borderRadius="5px" borderColor="lid.stroke" w="100%" maxWidth="900px" bg="white" m="0" ml="auto" mr="auto" mb="40px" mt={["10px","20px","20px","20px"]}
-       p="20px" pb="20px">
+export default function ReferralCode({web3, address, earnedReferrals, referralCount}) {
+  return (<Box w="100%" maxWidth="1200px" ml="auto" mr="auto" mt="60px" mb="60px" pl={{base:"20px", lg:"0px"}} pr={{base:"20px", lg:"0px"}}>
+    <Box textAlign="left" border="solid 1px" borderRadius="5px" borderColor="lid.stroke"bg="white" display="block" w="100%" mb="20px"
+       p="20px">
       <CopyToClipboard text={"https://sale.lid.sh/#/"+address}>
         <Button display="block" color="lid.bg" bg="lid.buttonBg" borderRadius="25px"
           h="50px" w="140px" float="right" mt="25px">
@@ -26,5 +25,25 @@ export default function ReferralCode({address}) {
         https://sale.lid.sh/#/{address}
       </Text>
     </Box>
-  );
+    <Grid w="100%" gap="20px" mb="40px"
+      templateRows={{base:"repeat(2, 1fr)", md:"max-content"}}
+      templateColumns={{base:"auto", md:"repeat(2, minmax(0, 1fr))"}}>
+      <Box w="100%"  borderRadius="5px" p="25px" border="solid 1px" borderColor="lid.stroke" bg="lid.bg" >
+        <Text fontSize="18px" m="0" p="0" color="lid.fgMed">
+          Account number of referrals
+        </Text>
+        <Text fontSize="38px" w="100%" fontWeight="bold">
+          {referralCount}
+        </Text>
+      </Box>
+      <Box w="100%"  borderRadius="5px" p="25px" border="solid 1px" borderColor="lid.stroke" bg="lid.bg" >
+        <Text fontSize="18px" m="0" p="0" color="lid.fgMed">
+          Referral Eth Earned
+        </Text>
+        <Text fontSize="38px" w="100%" fontWeight="bold">
+          {shortEther(earnedReferrals,web3)}
+        </Text>
+      </Box>
+    </Grid>
+  </Box>);
 }

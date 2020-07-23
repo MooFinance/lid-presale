@@ -14,6 +14,11 @@ export function shortEther(wei,web3) {
   if(wei === "") return ""
 
   const etherString = removeDecimal(fromWei(wei))
+
+  if(toBN(etherString).lt(toBN("1"))) {
+    return Number(Number(fromWei(wei)).toPrecision(4)).toString()
+  }
+
   if(toBN(etherString).lt(toBN("1000"))) {
     return Number(fromWei(wei)).toPrecision(4).toString()
   }

@@ -25,6 +25,7 @@ import StartTimer from "./components/StartTimer"
 import ReferralCode from "./components/ReferralCode"
 import Footer from "./components/Footer"
 import DepositForm from "./components/DepositForm"
+import PresaleCompletion from "./components/PresaleCompletion"
 
 const INFURA_ID = "86df43e496cb4c1cac25c9a57960a4ed"
 
@@ -214,6 +215,18 @@ function App() {
     alert("Deposit request sent. Check your wallet to see when it has completed, then refresh this page.")
   }
 
+  const handleSendToUniswap = async function() {
+    await lidPresaleSC.methods.sendToUniswap().send()
+  }
+
+  const handleIssueTokens = async function() {
+    await lidPresaleSC.methods.issueTokens().send()
+  }
+
+  const handleAllocateEth = async function() {
+    await lidPresaleSC.methods.sendEther().send()
+  }
+
 
   const resetApp = async () => {
     if (web3 && web3.currentProvider && web3.currentProvider.close) {
@@ -271,7 +284,7 @@ function App() {
       return ()=>clearInterval(interval)
     }
   },[endTime])
-
+  console.log("appweb3",web3)
   return (
     <ThemeProvider theme={theme} >
       <CSSReset />
@@ -281,13 +294,19 @@ function App() {
       {isActive ? (<Box w="100%">
         <EndTimer expiryTimestamp={(endTime == null ? new Date() : endTime)} />
         <DepositForm web3={web3} rate={currentPrice} val={depositVal} setVal={setDepositVal} handleClick={handleDeposit}
-          cap={isWhitelisted ? maxDeposit : toWei("1")}  />
+          cap={isWhitelisted ? maxDeposit : toWei("1")} accountDeposit={accountEthDeposit} />
       </Box>) : (
         <Box w="100%" textAlign="center">
           <StartTimer expiryTimestamp={new Date(startTime)} />
         </Box>
       )}
-      <ReferralCode address={address} />
+      <ReferralCode web3={web3} address={address} earnedReferrals={earnedReferrals} referralCount={referralCount} />
+      <Box w="100%" maxW="1200px" bg="lid.stroke" height="1px" mt="40px" mb="40px" />
+      <PresaleCompletion isActive={isActive} isEnded={isEnded}
+        handleSendToUniswap={handleSendToUniswap}
+        handleIssueTokens={handleIssueTokens}
+        handleAllocateEth={handleAllocateEth}
+      />
       <Footer />
     </ThemeProvider>
   );

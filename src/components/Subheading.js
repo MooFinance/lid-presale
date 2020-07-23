@@ -10,17 +10,17 @@ export default function Subheading({
   const toBN = web3.utils.toBN
   const toWei = web3.utils.toWei
   return (
-    <Box w="100%" bg="lid.bgGray" m="0" p={["20px", "20px", "0px"]} pt="0px" pb="20px" bg="lid.bgMed" position="relative">
+    <Box w="100%" m="0" p={["20px", "20px", "0px"]} pt="0px" pb="20px" bg="lid.bgMed" position="relative">
       <Box position="absolute" zIndex="1" left="0px" right="0px" bottom="0px" height="100px" bg="lid.bg" />
       <Flex w="100%" maxW="1200px" align="center" ml="auto" mr="auto" p="0px" pt="20px" pb="20px" position="relative" zIndex="2">
-        <Grid w="100%" gap="20px" maxWidth="100vw"
+        <Grid w="100%" gap="20px"
           templateRows={{base:"repeat(6, 1fr)", md:"repeat(2, max-content)"}}
           templateColumns={{base:"auto", md:"repeat(3, minmax(0, 1fr))"}}>
           <Box  w="100%"  borderRadius="5px" p="25px" border="solid 1px" borderColor="lid.stroke" bg="lid.bg" >
             <Text fontSize="18px" m="0" p="0" color="lid.fgMed">
               Verified LID Presale Contract
             </Text>
-            <Link wordBreak="break-word" color="lid.brand" href={"https://etherscan.io/token/"+addresses.lidPresale}>
+            <Link wordBreak="break-word" color="lid.brand" href={"https://etherscan.io/address/"+addresses.lidPresale}>
               {addresses.lidPresale}
             </Link>
           </Box>
