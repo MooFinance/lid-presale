@@ -341,7 +341,7 @@ function App() {
           </Box>
         )}
         <ReferralCode web3={web3} address={address} earnedReferrals={earnedReferrals} referralCount={referralCount} />
-        <Box w="100%" maxW="1200px" bg="lid.stroke" height="1px" mt="40px" mb="40px" />
+        <Box w="100%" maxW="1200px" bg="lid.stroke" height="1px" mt="40px" mb="40px" ml="auto" mr="auto"/>
         <PresaleCompletion isActive={isActive} isEnded={isEnded}
           handleSendToUniswap={handleSendToUniswap}
           handleIssueTokens={handleIssueTokens}

@@ -8,7 +8,7 @@ export default function ReferralCode({web3, address, earnedReferrals, referralCo
     <Box textAlign="left" border="solid 1px" borderRadius="5px" borderColor="lid.stroke"bg="white" display="block" w="100%" mb="20px"
        p="20px">
       <CopyToClipboard text={"https://sale.lid.sh/#/"+address}>
-        <Button display="block" color="lid.bg" bg="lid.buttonBg" borderRadius="25px"
+        <Button display="block" color="lid.fgLight" bg="lid.buttonBg" borderRadius="25px"
           h="50px" w="140px" float="right" mt="25px">
           Copy
         </Button>
@@ -19,8 +19,8 @@ export default function ReferralCode({web3, address, earnedReferrals, referralCo
       <Text color="lid.brand" mt="10px" mb="10px">
         2.5% rewards when anyone uses to deposit
       </Text>
-      <Text wordBreak="break-word" p="15px" pl="25px" color="lid.fgMed" border="solid 1px" borderColor="lid.stroke"
-        w="100%" borderRadius="5px"
+      <Text wordBreak="break-word" p="15px" pl="25px" color="lid.fgMed" border="solid 1px" borderColor="lid.stroke" borderRadius="28px"
+        w="100%"
       >
         https://sale.lid.sh/#/{address}
       </Text>

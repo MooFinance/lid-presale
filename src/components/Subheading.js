@@ -20,7 +20,7 @@ export default function Subheading({
             <Text fontSize="18px" m="0" p="0" color="lid.fgMed">
               Verified LID Presale Contract
             </Text>
-            <Link wordBreak="break-word" color="lid.brand" href={"https://etherscan.io/address/"+addresses.lidPresale}>
+            <Link wordBreak="break-word" color="lid.brand" href={"https://etherscan.io/address/"+addresses.lidPresale} mt="15px" display="block">
               {addresses.lidPresale}
             </Link>
           </Box>
