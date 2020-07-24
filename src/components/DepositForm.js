@@ -7,7 +7,7 @@ import {Box, Text, Button, NumberInput, NumberInputField  } from "@chakra-ui/cor
     return decimalString.substring(0,decimalString.indexOf('.'))
   }
 
-export default function DepositForm({web3,rate,cap,accountDeposit,setVal,val,handleClick}) {
+export default function DepositForm({web3,rate,cap,accountDeposit,setVal,val,handleClick,isWhitelisted}) {
 
   const toBN = web3.utils.toBN
   const toWei = web3.utils.toWei
@@ -42,9 +42,12 @@ export default function DepositForm({web3,rate,cap,accountDeposit,setVal,val,han
         <Text fontSize="18px" color="red.500">
           Your Available Max: {shortenDecimal(fromWei(availableMax))} ETH
         </Text>
-        <Text fontSize="14px" color="lid.fgMed">
+        { isWhitelisted ? (<Text fontSize="14px" color="lid.fgMed">
           (Whitelist cap: {shortenDecimal(fromWei(cap))} ETH)
-        </Text>
+        </Text>) : (<Text fontSize="14px" color="lid.fgMed">
+          (Non-Whitelist cap: 1 ETH)
+        </Text>)
+        }
         <Text fontSize="18px">
           Estimated LID: {!val ? "0" : shortenDecimal(
             toBN(val).div(toBN(rate))

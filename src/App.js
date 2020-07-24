@@ -26,6 +26,7 @@ import ReferralCode from "./components/ReferralCode"
 import Footer from "./components/Footer"
 import DepositForm from "./components/DepositForm"
 import PresaleCompletion from "./components/PresaleCompletion"
+import Claimer from "./components/Claimer"
 
 const INFURA_ID = "86df43e496cb4c1cac25c9a57960a4ed"
 
@@ -108,6 +109,13 @@ function App() {
   const [earnedReferrals, setEarnedReferrals] = useState("0")
   const [referralCount, setReferralCount] = useState("0")
 
+  const [hasSentToUniswap, setHasSentToUniswap] = useState(false)
+  const [hasIssuedTokens, setHasIssuedTokens] = useState(false)
+  const [hasSentEther, setHasSentEther] = useState(false)
+  const [finalEndTime, setFinalEndTime] = useState("0")
+  const [accountRedeemable, setAccountRedeemable] = useState("0")
+  const [accountClaimedLid, setAccountClaimedLid] = useState("0")
+
   const [depositVal, setDepositVal] = useState("")
 
   const toBN = web3.utils.toBN
@@ -143,7 +151,13 @@ function App() {
         currentPrice,
         earnedReferrals,
         referralCount,
-        isWhitelisted
+        isWhitelisted,
+        hasSentToUniswap,
+        hasIssuedTokens,
+        hasSentEther,
+        finalEndTime,
+        accountRedeemable,
+        accountClaimedLid
       ] = await Promise.all([
         lidPresaleSC.methods.totalTokens().call(),
         web3.eth.getBalance(addresses.lidPresale),
@@ -153,7 +167,13 @@ function App() {
         lidPresaleSC.methods.calculateRatePerEth().call(),
         lidPresaleSC.methods.earnedReferrals(address).call(),
         lidPresaleSC.methods.referralCounts(address).call(),
-        lidPresaleSC.methods.whitelist(address).call()
+        lidPresaleSC.methods.whitelist(address).call(),
+        lidPresaleSC.methods.whitelist(address).call(),
+        lidPresaleSC.methods.hasSentToUniswap().call(),
+        lidPresaleSC.methods.hasIssuedTokens().call(),
+        lidPresaleSC.methods.finalEndTime().call(),
+        lidPresaleSC.methods.calculateReedemable(address).call(),
+        lidPresaleSC.methods.accountClaimedLid(address).call()
       ])
 
       const [maxDeposit, endTime] = await Promise.all([
@@ -172,6 +192,12 @@ function App() {
       setIsWhitelisted(isWhitelisted)
       setMaxDeposit(maxDeposit)
       setEndTime(new Date(endTime*1000))
+      setHasSentToUniswap(hasSentToUniswap)
+      setHasIssuedTokens(hasIssuedTokens)
+      setHasSentEther(hasSentEther)
+      setFinalEndTime(finalEndTime)
+      setAccountRedeemable(accountRedeemable)
+      setAccountClaimedLid(accountClaimedLid)
     }
 
     fetchData(web3,address,lidPresaleSC,lidTimerSC,lidTokenSC)
@@ -213,6 +239,15 @@ function App() {
     }
     await lidPresaleSC.methods.deposit(referralAddress).send({from:address,value:depositVal})
     alert("Deposit request sent. Check your wallet to see when it has completed, then refresh this page.")
+  }
+
+  const handleLidClaim = async function() {
+    if(toBN(accountRedeemable).lt(toBN("1"))) {
+      alert("You must have at least 1 wei of LID to claim.")
+      return
+    }
+    await lidPresaleSC.methods.claim().send()
+    alert("Claim request sent. Check your wallet to see when it has completed, then refresh this page.")
   }
 
   const handleSendToUniswap = async function() {
@@ -291,22 +326,29 @@ function App() {
       <Header web3={web3} address={address} onConnect={onConnect} isWhitelisted={isWhitelisted} />
       <Subheading web3={web3} address={address} totalLid={totalLid} totalEth={totalEth}
         totalDepositors={totalDepositors} accountEthDeposit={accountEthDeposit} accountLid={accountLid} />
-      {isActive ? (<Box w="100%">
-        <EndTimer expiryTimestamp={(endTime == null ? new Date() : endTime)} />
-        <DepositForm web3={web3} rate={currentPrice} val={depositVal} setVal={setDepositVal} handleClick={handleDeposit}
-          cap={isWhitelisted ? maxDeposit : toWei("1")} accountDeposit={accountEthDeposit} />
-      </Box>) : (
-        <Box w="100%" textAlign="center">
-          <StartTimer expiryTimestamp={new Date(startTime)} />
-        </Box>
-      )}
-      <ReferralCode web3={web3} address={address} earnedReferrals={earnedReferrals} referralCount={referralCount} />
-      <Box w="100%" maxW="1200px" bg="lid.stroke" height="1px" mt="40px" mb="40px" />
-      <PresaleCompletion isActive={isActive} isEnded={isEnded}
-        handleSendToUniswap={handleSendToUniswap}
-        handleIssueTokens={handleIssueTokens}
-        handleAllocateEth={handleAllocateEth}
-      />
+      {(isEnded && hasSentToUniswap && hasIssuedTokens) ? (<>
+        <Claimer web3={web3} accountLid={accountLid} handleLidClaim={handleLidClaim}
+            hasSentToUniswap={hasSentToUniswap} hasIssuedTokens={hasIssuedTokens} hasSentEther={hasSentEther}
+            finalEndTime={finalEndTime} accountRedeemable={accountRedeemable} accountClaimedLid={accountClaimedLid} />
+      </>) : (<>
+        {isActive ? (<Box w="100%">
+          <EndTimer expiryTimestamp={(endTime == null ? new Date() : endTime)} />
+          <DepositForm web3={web3} rate={currentPrice} val={depositVal} setVal={setDepositVal} handleClick={handleDeposit}
+            cap={isWhitelisted ? maxDeposit : toWei("1")} accountDeposit={accountEthDeposit} isWhitelisted={isWhitelisted} />
+        </Box>) : (
+          <Box w="100%" textAlign="center">
+            <StartTimer expiryTimestamp={new Date(startTime)} />
+          </Box>
+        )}
+        <ReferralCode web3={web3} address={address} earnedReferrals={earnedReferrals} referralCount={referralCount} />
+        <Box w="100%" maxW="1200px" bg="lid.stroke" height="1px" mt="40px" mb="40px" />
+        <PresaleCompletion isActive={isActive} isEnded={isEnded}
+          handleSendToUniswap={handleSendToUniswap}
+          handleIssueTokens={handleIssueTokens}
+          handleAllocateEth={handleAllocateEth}
+        />
+      </>)
+      }
       <Footer />
     </ThemeProvider>
   );
