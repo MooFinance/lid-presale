@@ -34,7 +34,7 @@ export default function Header({web3, address, isWhitelisted, onConnect}) {
         Whitelisted? {isWhitelisted ? "Yes" : "No"}
         </Text>
         <Text>
-          v1.1.2
+          v1.1.3
         </Text>
       </Box>
 

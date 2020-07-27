@@ -28,13 +28,13 @@ import DepositForm from "./components/DepositForm"
 import PresaleCompletion from "./components/PresaleCompletion"
 import Claimer from "./components/Claimer"
 
-const INFURA_ID = "86df43e496cb4c1cac25c9a57960a4ed"
+const INFURA_ID = "f955014944b64ba2b1cab50d496a2b90"
 
 const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider, // required
     options: {
-      infuraId: INFURA_ID // required
+      infuraId: "29a7f0c37b214a90934bec1b032d5c8f" // required
     }
   },
   fortmatic: {
@@ -67,7 +67,7 @@ const providerOptions = {
   mewconnect: {
     package: MewConnect, // required
     options: {
-      infuraId: INFURA_ID // required
+      infuraId: "53a6aee5a5c74599b815999befb91ecc" // required
     }
   }
 }

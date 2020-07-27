@@ -28,7 +28,7 @@ export default function Footer() {
           <Image  w="auto" h="25px" src="./icons/reddit.png" />
         </Link>
         <Link display="inline-block" href="https://github.com/carlsbad-sunshine/lid-contracts" m="20px" >
-          <Image  w="auto" h="25px" src="./icons/Github-Mark-120px-plus.png" />
+          <Image  w="auto" h="25px" src="./icons/github.png" />
         </Link>
         <Link display="inline-block" href="https://www.youtube.com/channel/UCM6Q_SMoQAALhhiJW5OZF9w/featured" m="20px" >
           <Image  w="auto" h="25px" src="./icons/Youtube.png" />
