@@ -89,8 +89,8 @@ function App() {
 
   const [startTime, setStartTime] = useState(Date.UTC(2020,6,22,2,0,0,0))
   const [endTime, setEndTime] = useState(null)
-  const [isActive, setIsActive] = useState(Date.now() > startTime)
-  const [isEnded, setIsEnded] = useState(false)
+  const [isActive, setIsActive] = useState(false)
+  const [isEnded, setIsEnded] = useState(true)
 
   const [lidPresaleSC, setLidPresale] = useState(null)
   const [lidTimerSC, setLidTimerSC] = useState(null)
@@ -246,20 +246,20 @@ function App() {
       alert("You must have at least 1 wei of LID to claim.")
       return
     }
-    await lidPresaleSC.methods.claim().send()
+    await lidPresaleSC.methods.redeem().send({from: address})
     alert("Claim request sent. Check your wallet to see when it has completed, then refresh this page.")
   }
 
   const handleSendToUniswap = async function() {
-    await lidPresaleSC.methods.sendToUniswap().send()
+    await lidPresaleSC.methods.sendToUniswap().send({from: address})
   }
 
   const handleIssueTokens = async function() {
-    await lidPresaleSC.methods.issueTokens().send()
+    await lidPresaleSC.methods.issueTokens().send({from: address})
   }
 
   const handleAllocateEth = async function() {
-    await lidPresaleSC.methods.sendEther().send()
+    await lidPresaleSC.methods.sendEther().send({from: address})
   }
 
 
@@ -302,23 +302,7 @@ function App() {
     if(window.web3) onConnect()
   },[])
 
-  useEffect(()=>{
-    if(Date.now() < startTime){
-      let interval = setInterval(()=>{
-        setIsActive(Date.now() > startTime)
-      },500)
-      return ()=>clearInterval(interval)
-    }
-  },[startTime])
 
-  useEffect(()=>{
-    if(Date.now() < endTime ){
-      let interval = setInterval(()=>{
-        setIsEnded(Date.now() > endTime)
-      },500)
-      return ()=>clearInterval(interval)
-    }
-  },[endTime])
   console.log("appweb3",web3)
   return (
     <ThemeProvider theme={theme} >
