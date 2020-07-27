@@ -310,29 +310,16 @@ function App() {
       <Header web3={web3} address={address} onConnect={onConnect} isWhitelisted={isWhitelisted} />
       <Subheading web3={web3} address={address} totalLid={totalLid} totalEth={totalEth}
         totalDepositors={totalDepositors} accountEthDeposit={accountEthDeposit} accountLid={accountLid} />
-      {(isEnded && hasSentToUniswap && hasIssuedTokens) ? (<>
-        <Claimer web3={web3} accountLid={accountLid} handleLidClaim={handleLidClaim}
-            hasSentToUniswap={hasSentToUniswap} hasIssuedTokens={hasIssuedTokens} hasSentEther={hasSentEther}
-            finalEndTime={finalEndTime} accountRedeemable={accountRedeemable} accountClaimedLid={accountClaimedLid} />
-      </>) : (<>
-        {isActive ? (<Box w="100%">
-          <EndTimer expiryTimestamp={(endTime == null ? new Date() : endTime)} />
-          <DepositForm web3={web3} rate={currentPrice} val={depositVal} setVal={setDepositVal} handleClick={handleDeposit}
-            cap={isWhitelisted ? maxDeposit : toWei("1")} accountDeposit={accountEthDeposit} isWhitelisted={isWhitelisted} />
-        </Box>) : (
-          <Box w="100%" textAlign="center">
-            <StartTimer expiryTimestamp={new Date(startTime)} />
-          </Box>
-        )}
-        <ReferralCode web3={web3} address={address} earnedReferrals={earnedReferrals} referralCount={referralCount} />
-        <Box w="100%" maxW="1200px" bg="lid.stroke" height="1px" mt="40px" mb="40px" ml="auto" mr="auto"/>
-        <PresaleCompletion isActive={isActive} isEnded={isEnded}
-          handleSendToUniswap={handleSendToUniswap}
-          handleIssueTokens={handleIssueTokens}
-          handleAllocateEth={handleAllocateEth}
-        />
-      </>)
-      }
+      <Claimer web3={web3} accountLid={accountLid} handleLidClaim={handleLidClaim}
+          hasSentToUniswap={hasSentToUniswap} hasIssuedTokens={hasIssuedTokens} hasSentEther={hasSentEther}
+          finalEndTime={finalEndTime} accountRedeemable={accountRedeemable} accountClaimedLid={accountClaimedLid} />
+      <ReferralCode web3={web3} address={address} earnedReferrals={earnedReferrals} referralCount={referralCount} />
+      <Box w="100%" maxW="1200px" bg="lid.stroke" height="1px" mt="40px" mb="40px" ml="auto" mr="auto"/>
+      <PresaleCompletion isActive={isActive} isEnded={isEnded}
+        handleSendToUniswap={handleSendToUniswap}
+        handleIssueTokens={handleIssueTokens}
+        handleAllocateEth={handleAllocateEth}
+      />
       <Footer />
     </ThemeProvider>
   );
